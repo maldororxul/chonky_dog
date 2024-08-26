@@ -1,7 +1,7 @@
 [app]
 
 # (str) Title of your application
-title = ChonkyDog
+title = Chonky Dog
 
 # (str) Source code where the main.py file is located
 source.dir = .

@@ -1,6 +1,10 @@
+"""
+    См. https://www.youtube.com/watch?v=s7kNe5o86yY
+    см. Google AdMob, Unity Ads, Facebook Audience Network
+    Google Play Billing API
+"""
 from kivy.app import App
 from kivy.core.window import Window
-
 from widgets.menu_widget import MenuWidget
 from widgets.game_session import GameSessionWidget
 from kivy.uix.relativelayout import RelativeLayout
@@ -42,6 +46,4 @@ class ChonkyDog(App):
 
 
 if __name__ == '__main__':
-    # см. Google AdMob, Unity Ads, Facebook Audience Network
-    # Google Play Billing API
     ChonkyDog().run()
