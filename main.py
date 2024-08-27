@@ -1,34 +1,30 @@
-"""
-    См. https://www.youtube.com/watch?v=s7kNe5o86yY
-    см. Google AdMob, Unity Ads, Facebook Audience Network
-    Google Play Billing API
-    https://gist.github.com/zl475505/25245e8d28b13b3273e8bae1a63c4af2
-
-    docker build -t kivy-android-builder-updated .
-    docker run --rm -v "${PWD}:/home/user/hostcwd" kivy-android-builder-updated -v android debug
-"""
 from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.image import Image
 from kivy.clock import Clock
-from kivy.core.window import Window
+from kivy.core.image import Image as CoreImage
+from kivy.core.audio import SoundLoader
 from widgets.menu_widget import MenuWidget
 from widgets.game_session import GameSessionWidget
-from kivy.uix.relativelayout import RelativeLayout
 from widgets.sound_manager import SoundManager
 
 
-class MainGameWidget(RelativeLayout):
+class LoadingWidget(BoxLayout):
+    def __init__(self, **kwargs):
+        super(LoadingWidget, self).__init__(**kwargs)
+        self.orientation = 'vertical'
+        self.add_widget(Label(text="Loading Chonky Dog...", font_size='20sp', halign='center'))
+
+
+class MainGameWidget(BoxLayout):
     def __init__(self, **kwargs):
         super(MainGameWidget, self).__init__(**kwargs)
+        self.orientation = 'vertical'
         self.sound_manager = SoundManager()
         self.menu_widget = MenuWidget(self.start_game, self.sound_manager)
         self.add_widget(self.menu_widget)
         self.sound_manager.play_menu_music()
-
-    def on_size(self, *args):
-        # Принудительное обновление геометрии дочерних виджетов
-        self.menu_widget.size = self.size
-        self.menu_widget.pos = self.pos
-        # self.game_session_widget.size = self.size if self.game_session_widget else (0, 0)
 
     def start_game(self, level):
         self.sound_manager.stop_menu_music()
@@ -50,12 +46,36 @@ class MainGameWidget(RelativeLayout):
 
 class ChonkyDog(App):
     def build(self):
-        window_width = 360 * 1.2
-        window_height = 640 * 1.2
-        Window.size = (window_width, window_height)
-        root_widget = MainGameWidget()
-        Clock.schedule_once(lambda dt: root_widget.do_layout(), 0.1)  # Отложенное обновление разметки
-        return root_widget
+        # Создаем виджет загрузки
+        self.loading_widget = LoadingWidget()
+        return self.loading_widget
+
+    def on_start(self):
+        # Начинаем предварительную загрузку ресурсов
+        Clock.schedule_once(self.preload_resources, 0.1)
+
+    def preload_resources(self, *args):
+        # Список ресурсов для загрузки
+        images = ['images/main.png', 'images/logo.png', 'images/level1/background.png']
+        sounds = ['sounds/menu_music.mp3', 'sounds/game_music.mp3']
+
+        # Предварительная загрузка изображений
+        for img in images:
+            CoreImage(img).texture
+
+        # Предварительная загрузка звуков
+        for snd in sounds:
+            sound = SoundLoader.load(snd)
+            if sound:
+                sound.unload()  # Загружаем и выгружаем звук, чтобы проверить его доступность
+
+        # Переход к отображению основного интерфейса после загрузки ресурсов
+        Clock.schedule_once(self.show_main_screen, 0.1)
+
+    def show_main_screen(self, *args):
+        # Удаляем виджет загрузки и отображаем главное меню
+        self.root.clear_widgets()
+        self.root.add_widget(MainGameWidget())
 
 
 if __name__ == '__main__':

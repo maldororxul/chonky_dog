@@ -1,13 +1,8 @@
-from kivy.uix.label import Label
+from kivy.core.window import Window
 from kivy.uix.relativelayout import RelativeLayout
-from kivy.properties import ObjectProperty
-from kivy.uix.button import Button
 from kivy.uix.image import Image
-
 from widgets.bordered_button import BorderedButton
-from widgets.progress_manager import load_progress, get_level_info  # Импортируем функцию для загрузки прогресса
-from widgets.sound_manager import SoundManager
-
+from widgets.progress_manager import get_level_info
 
 class MenuWidget(RelativeLayout):
     def __init__(self, start_game_callback, sound_manager, **kwargs):
@@ -23,17 +18,24 @@ class MenuWidget(RelativeLayout):
         self.create_header()
         self.create_level_buttons()
 
+        # Привязка метода on_size к событию изменения размера окна
+        Window.bind(on_resize=self.on_size)
+
+    def on_size(self, *args):
+        # Обновление размеров и положения виджетов
+        self.bg_image.size = self.size
+        self.bg_image.pos = self.pos
+
+        for i, button in enumerate(self.level_buttons):
+            button.size_hint = (0.25, 0.25)  # Размер кнопок
+            button.pos_hint = {'center_x': (i + 1) / (len(self.level_buttons) + 1), 'center_y': 0.5}  # Центровка по горизонтали с равными интервалами
+        self.do_layout()
+
     def create_header(self):
         # Логотип
-        logo = Image(source='images/logo.png', size_hint=(None, None), size=(300, 300),
+        logo = Image(source='images/logo.png', size_hint=(None, None), size=(Window.width * 0.35, Window.height * 0.35),
                      pos_hint={'center_x': 0.5, 'top': 1})
         self.add_widget(logo)
-
-        # Текст "SELECT LEVEL"
-        # label = Label(text="SELECT LEVEL", font_size=24, color=(1, 1, 1, 1),
-        #               size_hint=(None, None), size=(200, 50),
-        #               pos_hint={'center_x': 0.5, 'y': 0.8})
-        # self.add_widget(label)
 
     def create_level_buttons(self):
         levels = ['level1', 'level2']  # Добавьте больше уровней при необходимости
@@ -47,7 +49,7 @@ class MenuWidget(RelativeLayout):
         for i, level in enumerate(levels):
             level_info = get_level_info(level)
             bg_image_path = f'images/{level}/background.png'
-            button = BorderedButton(size_hint=(0.25, 0.25), pos_hint={'center_x': 0.3 + i * 0.4, 'center_y': 0.5},
+            button = BorderedButton(size_hint=(0.25, 0.25), pos_hint={'center_x': (i + 1) / (len(levels) + 1), 'center_y': 0.5},
                             background_normal=bg_image_path)
             if not level_info['unlocked']:
                 button.disabled = True  # Заблокировать уровень, если он еще не разблокирован
