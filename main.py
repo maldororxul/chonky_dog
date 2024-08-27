@@ -2,6 +2,10 @@
     См. https://www.youtube.com/watch?v=s7kNe5o86yY
     см. Google AdMob, Unity Ads, Facebook Audience Network
     Google Play Billing API
+    https://gist.github.com/zl475505/25245e8d28b13b3273e8bae1a63c4af2
+
+    docker build -t kivy-android-builder-updated .
+    docker run --rm -v "${PWD}:/home/user/hostcwd" kivy-android-builder-updated -v android debug
 """
 from kivy.app import App
 from kivy.core.window import Window

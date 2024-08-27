@@ -1,14 +1,15 @@
+import os
 from kivy.core.audio import SoundLoader
 
 class SoundManager:
     def __init__(self):
-        self.flip_sound = SoundLoader.load('sounds/flip.wav')
-        self.match_sound = SoundLoader.load('sounds/match.wav')
-        self.button_sound = SoundLoader.load('sounds/button.wav')
-        self.win_sound = SoundLoader.load('sounds/win.wav')
+        self.flip_sound = SoundLoader.load('sounds/flip.ogg')
+        self.match_sound = SoundLoader.load('sounds/match.ogg')
+        self.button_sound = SoundLoader.load('sounds/button.ogg')
+        self.win_sound = SoundLoader.load('sounds/win.ogg')
 
-        self.menu_music = SoundLoader.load('music/menu_music.mp3')
-        self.win_music = SoundLoader.load('music/win_music.mp3')
+        self.menu_music = SoundLoader.load('music/menu_music.ogg')
+        self.win_music = SoundLoader.load('music/win_music.ogg')
         self.game_music = None
 
         # Настройка громкости
@@ -49,7 +50,10 @@ class SoundManager:
     def play_game_music(self, level):
         if self.menu_music:
             self.menu_music.stop()
-        self.game_music = SoundLoader.load(f'music/{level}.mp3')
+        file = f'music/{level}.mp3'
+        if not os.path.exists(file):
+            file = f'music/level1.mp3'
+        self.game_music = SoundLoader.load(file)
         if self.game_music:
             self.game_music.volume = 0.7
             self.game_music.loop = True

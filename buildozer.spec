@@ -30,3 +30,10 @@ source.include_dirs = assets/,images/,sounds/,widgets/
 
 # (list) Link to buildozer documentation
 # https://github.com/kivy/buildozer
+
+orientation = portrait
+fullscreen = 1
+
+android.permissions = INTERNET, RECORD_AUDIO, MODIFY_AUDIO_SETTINGS
+
+android.meta_data = android.media.AUDIOFOCUS_GAIN_TRANSIENT
