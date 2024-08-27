@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.label import Label
 from kivy.uix.button import Button
@@ -24,20 +25,25 @@ class ControlWidget(RelativeLayout):
             self.rect = Rectangle(size=self.size, pos=self.pos)
             self.bind(pos=self.update_rect, size=self.update_rect)
 
-        self.timer_label = Label(text="00:00", color=(1, 1, 1, 1), font_size=24, size_hint=(None, None), pos_hint={'center_x': 0.5, 'center_y': 0.5})
+        self.timer_label = Label(text="00:00", color=(1, 1, 1, 1), font_size=24, size_hint=(0.20, 0.1), pos_hint={'center_x': 0.5, 'center_y': 0.5})
         self.timer_label.size = self.timer_label.texture_size
         self.add_widget(self.timer_label)
 
-        self.exit_button = Button(text="X", size_hint=(None, None), size=(50, 50), pos_hint={'right': 1, 'center_y': 0.5})
+        self.exit_button = Button(
+            text="CLOSE",
+            size=(Window.width * 0.2, Window.height * 0.05),  # Фиксированные размеры в зависимости от экрана
+            size_hint=(None, None),  # Отключение size_hint
+            pos_hint={'right': 0.95, 'top': 0.9}
+        )
         self.exit_button.bind(on_press=end_game_callback)
         self.exit_button.bind(on_press=lambda instance: self.sound_manager.play_button_sound())  # Звук кнопки
         self.add_widget(self.exit_button)
 
         # Кнопка для отладки
-        self.debug_button = Button(text="!!", size_hint=(None, None), size=(50, 50), pos_hint={'x': 0, 'center_y': 0.5})
-        self.debug_button.bind(on_press=debug_callback)
-        self.debug_button.bind(on_press=lambda instance: self.sound_manager.play_button_sound())  # Звук кнопки
-        self.add_widget(self.debug_button)
+        # self.debug_button = Button(text="!!", size_hint=(0.1, 0.1), size=(50, 50), pos_hint={'x': 0, 'top': 1})
+        # self.debug_button.bind(on_press=debug_callback)
+        # self.debug_button.bind(on_press=lambda instance: self.sound_manager.play_button_sound())  # Звук кнопки
+        # self.add_widget(self.debug_button)
 
         self.time = 0
         self.clock_event = None

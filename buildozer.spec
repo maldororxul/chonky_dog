@@ -6,11 +6,8 @@ title = Chonky Dog
 # (str) Source code where the main.py file is located
 source.dir = .
 
-# (str) Application versioning (method 1)
+# (str) Application versioning
 version = 0.1
-
-# (str) Full name including version (method 2)
-# version.regex = 
 
 # (list) Application requirements
 # Add all your project's dependencies here
@@ -23,17 +20,19 @@ package.name = chonkydog
 package.domain = org.chonkydog
 
 # (str) Source code where the main.py file is located
-source.include_exts = py,png,jpg,kv,atlas
+source.include_exts = py,png,jpg,kv,atlas,ogg,wav,mp3
 
 # (list) Include specific directories (comma separated) (from the source. dir)
 source.include_dirs = assets/,images/,sounds/,widgets/
 
-# (list) Link to buildozer documentation
-# https://github.com/kivy/buildozer
-
+# Orientation
 orientation = portrait
+
+# Fullscreen mode
 fullscreen = 1
 
-android.permissions = INTERNET, RECORD_AUDIO, MODIFY_AUDIO_SETTINGS
+# Permissions
+android.permissions = RECORD_AUDIO, MODIFY_AUDIO_SETTINGS
 
-android.meta_data = android.media.AUDIOFOCUS_GAIN_TRANSIENT
+# Uncomment if needed for audio focus
+# android.meta_data = com.google.android.gms.ads.APPLICATION_ID = YOUR_ADMOB_APP_ID

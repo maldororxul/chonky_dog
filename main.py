@@ -8,11 +8,12 @@
     docker run --rm -v "${PWD}:/home/user/hostcwd" kivy-android-builder-updated -v android debug
 """
 from kivy.app import App
+from kivy.clock import Clock
 from kivy.core.window import Window
 from widgets.menu_widget import MenuWidget
 from widgets.game_session import GameSessionWidget
 from kivy.uix.relativelayout import RelativeLayout
-from widgets.sound_manager import SoundManager  # Импортируем SoundManager
+from widgets.sound_manager import SoundManager
 
 
 class MainGameWidget(RelativeLayout):
@@ -22,6 +23,12 @@ class MainGameWidget(RelativeLayout):
         self.menu_widget = MenuWidget(self.start_game, self.sound_manager)
         self.add_widget(self.menu_widget)
         self.sound_manager.play_menu_music()
+
+    def on_size(self, *args):
+        # Принудительное обновление геометрии дочерних виджетов
+        self.menu_widget.size = self.size
+        self.menu_widget.pos = self.pos
+        # self.game_session_widget.size = self.size if self.game_session_widget else (0, 0)
 
     def start_game(self, level):
         self.sound_manager.stop_menu_music()
@@ -46,7 +53,9 @@ class ChonkyDog(App):
         window_width = 360 * 1.2
         window_height = 640 * 1.2
         Window.size = (window_width, window_height)
-        return MainGameWidget()
+        root_widget = MainGameWidget()
+        Clock.schedule_once(lambda dt: root_widget.do_layout(), 0.1)  # Отложенное обновление разметки
+        return root_widget
 
 
 if __name__ == '__main__':

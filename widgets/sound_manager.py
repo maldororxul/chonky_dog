@@ -50,9 +50,9 @@ class SoundManager:
     def play_game_music(self, level):
         if self.menu_music:
             self.menu_music.stop()
-        file = f'music/{level}.mp3'
+        file = f'music/{level}.ogg'
         if not os.path.exists(file):
-            file = f'music/level1.mp3'
+            file = f'music/level1.ogg'
         self.game_music = SoundLoader.load(file)
         if self.game_music:
             self.game_music.volume = 0.7
